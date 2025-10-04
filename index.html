@@ -3,15 +3,22 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Animated Ciphers Background</title>
+    <title>Ciphers Hero Background</title>
     <style>
-      /* --- Base & Color Variables (Extracted from src/styles/globals.css) --- */
+      /* --- Base & Color Variables --- */
       :root {
         --deep-space-black: #0a0a0a;
         --cyber-yellow: #ffd700;
         --off-white: #f5f5f5;
-        --h-20: 5rem; /* ~80px */
-        --size-6: 1.5rem; /* 24px */
+        --size-6: 1.5rem; /* 24px for icons */
+        --spacing: 0.25rem;
+
+        /* Adjusted text sizes for CIPHERS */
+        --text-title-base: 3rem; /* Smaller base for "6xl" */
+        --text-title-md: 4.5rem; /* Smaller for "8xl" */
+        --text-title-lg: 6rem; /* Smaller for "9xl" */
+
+        --h-20: 5rem; /* 80px for stream lines */
       }
 
       body {
@@ -21,9 +28,23 @@
         height: 100vh;
         margin: 0;
         padding: 0;
+        font-family: sans-serif;
+
+        /* Body itself is the flex container for perfect centering of #animated-background */
+        display: flex;
+        align-items: center;
+        justify-content: center;
       }
 
-      /* --- Geometric Grid Background (Extracted from src/styles/globals.css) --- */
+      /* --- Main Animated Background Container --- */
+      #animated-background {
+        position: absolute; /* Occupy full viewport */
+        inset: 0;
+        min-height: 100vh;
+        overflow: hidden;
+      }
+
+      /* --- Geometric Grid Background --- */
       .geometric-bg {
         background-image: linear-gradient(
             rgba(255, 215, 0, 0.03) 1px,
@@ -33,23 +54,17 @@
         background-size: 50px 50px;
       }
 
-      /* --- New Digital Glitch Stream Animation --- */
-      @keyframes dataStreamGlitchFall {
+      /* --- Original Data Stream Animation (Simple Fall) --- */
+      @keyframes dataStream {
         0% {
           transform: translateY(-100vh) translateX(0);
           opacity: 0;
         }
-        5% {
+        10% {
           opacity: 1;
-          transform: translateY(-90vh) translateX(0);
         }
-        50% {
-          transform: translateY(0vh) translateX(5px);
-          opacity: 0.95;
-        }
-        95% {
-          opacity: 0.8;
-          transform: translateY(90vh) translateX(-5px);
+        90% {
+          opacity: 1;
         }
         100% {
           transform: translateY(100vh) translateX(0);
@@ -57,37 +72,20 @@
         }
       }
 
-      @keyframes flicker {
+      /* --- Floating Icon Animations --- */
+      @keyframes pulse {
         0%,
         100% {
           opacity: 1;
         }
-        5%,
-        35%,
-        75% {
-          opacity: 0.8;
-        }
-        10%,
-        40%,
-        70% {
-          opacity: 1;
-        }
-        15%,
-        55%,
-        80% {
-          opacity: 0.9;
+        50% {
+          opacity: 0.5;
         }
       }
 
-      /* --- Utility/Animation Classes --- */
-      .min-h-screen {
-        height: 100vh;
-      }
+      /* --- Utility/Structural Classes --- */
       .relative {
         position: relative;
-      }
-      .overflow-hidden {
-        overflow: hidden;
       }
       .absolute {
         position: absolute;
@@ -101,34 +99,24 @@
       .opacity-20 {
         opacity: 0.2;
       }
+      .text-cyber-yellow {
+        color: var(--cyber-yellow);
+      }
+
       .w-px {
         width: 1px;
       }
       .h-20-px {
         height: var(--h-20);
       }
-      .text-cyber-yellow {
-        color: var(--cyber-yellow);
-      }
-
       .bg-gradient-to-b {
         background-image: linear-gradient(to bottom, var(--tw-gradient-stops));
       }
 
       .animate-dataStream {
-        animation: dataStreamGlitchFall var(--stream-duration) linear infinite,
-          flicker 0.1s infinite step-end;
+        animation: dataStream var(--stream-duration) linear infinite;
       }
 
-      @keyframes pulse {
-        0%,
-        100% {
-          opacity: 1;
-        }
-        50% {
-          opacity: 0.5;
-        }
-      }
       .animate-pulse-slow {
         animation: pulse 2s ease-in-out infinite;
       }
@@ -142,18 +130,64 @@
         stroke-linejoin: round;
         fill: none;
       }
+
+      /* --- Title Container Styles for Centering --- */
+      .title-container {
+        position: absolute; /* Position relative to #animated-background */
+        inset: 0; /* Occupy full space of #animated-background */
+        display: flex; /* Use flexbox for centering */
+        align-items: center; /* Center vertically */
+        justify-content: center; /* Center horizontally */
+        z-index: 10; /* Ensure it's above background elements */
+        text-align: center; /* For text inside */
+        padding: 0 1.5rem; /* px-6 from Tailwind */
+      }
+
+      /* --- Title Styles --- */
+      .hero-title {
+        font-size: var(--text-title-base);
+        font-weight: bold;
+        letter-spacing: 0.05em; /* tracking-wider */
+        color: var(--cyber-yellow);
+        margin-bottom: calc(var(--spacing) * 4); /* mb-4 */
+        line-height: 1;
+      }
+      .hero-divider {
+        height: calc(var(--spacing) * 1); /* h-1 */
+        background: var(--cyber-yellow);
+        margin: auto;
+        width: calc(var(--spacing) * 48); /* w-48 */
+      }
+
+      @media (min-width: 768px) {
+        .hero-title {
+          font-size: var(--text-title-md);
+        }
+        .hero-divider {
+          width: calc(var(--spacing) * 64);
+        } /* md:w-64 */
+      }
+      @media (min-width: 1024px) {
+        .hero-title {
+          font-size: var(--text-title-lg);
+        }
+      }
     </style>
   </head>
   <body>
-    <div
-      id="animated-background"
-      class="relative min-h-screen overflow-hidden geometric-bg"
-    >
+    <div id="animated-background" class="geometric-bg">
       <div class="absolute inset-0" id="background-elements-container"></div>
+
+      <div class="title-container">
+        <div>
+          <h1 class="hero-title">CIPHERS</h1>
+          <div class="hero-divider"></div>
+        </div>
+      </div>
     </div>
 
     <script>
-      // Lucide SVG contents (paths only)
+      // Lucide SVG contents (paths only) - Accurate to source library
       const ICONS = {
         Code: '<polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline>',
         Database:
@@ -171,9 +205,10 @@
       const container = document.getElementById(
         "background-elements-container"
       );
+      const numStreams = 8; // Original count for falling lines
 
-      // --- 1. Data Streams Generation ---
-      for (let i = 0; i < 8; i++) {
+      // --- 1. Data Streams Generation (Falling Lines) ---
+      for (let i = 0; i < numStreams; i++) {
         const delay = i * 0.5;
         const duration = 3 + Math.random() * 2;
         const left = Math.random() * 100;
@@ -207,7 +242,6 @@
                 animation-delay: ${data.delay}s;
             `;
 
-        // Create the SVG element
         const svg = document.createElementNS(
           "http://www.w3.org/2000/svg",
           "svg"
