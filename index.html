@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Animated Ciphers Background</title>
+    <style>
+      /* --- Base & Color Variables (Extracted from src/styles/globals.css) --- */
+      :root {
+        --deep-space-black: #0a0a0a;
+        --cyber-yellow: #ffd700;
+        --off-white: #f5f5f5;
+        --h-20: 5rem; /* ~80px */
+        --size-6: 1.5rem; /* 24px */
+      }
+
+      body {
+        background: var(--deep-space-black);
+        color: var(--off-white);
+        overflow: hidden;
+        height: 100vh;
+        margin: 0;
+        padding: 0;
+      }
+
+      /* --- Geometric Grid Background (Extracted from src/styles/globals.css) --- */
+      .geometric-bg {
+        background-image: linear-gradient(
+            rgba(255, 215, 0, 0.03) 1px,
+            transparent 1px
+          ),
+          linear-gradient(90deg, rgba(255, 215, 0, 0.03) 1px, transparent 1px);
+        background-size: 50px 50px;
+      }
+
+      /* --- New Digital Glitch Stream Animation --- */
+      @keyframes dataStreamGlitchFall {
+        0% {
+          transform: translateY(-100vh) translateX(0);
+          opacity: 0;
+        }
+        5% {
+          opacity: 1;
+          transform: translateY(-90vh) translateX(0);
+        }
+        50% {
+          transform: translateY(0vh) translateX(5px);
+          opacity: 0.95;
+        }
+        95% {
+          opacity: 0.8;
+          transform: translateY(90vh) translateX(-5px);
+        }
+        100% {
+          transform: translateY(100vh) translateX(0);
+          opacity: 0;
+        }
+      }
+
+      @keyframes flicker {
+        0%,
+        100% {
+          opacity: 1;
+        }
+        5%,
+        35%,
+        75% {
+          opacity: 0.8;
+        }
+        10%,
+        40%,
+        70% {
+          opacity: 1;
+        }
+        15%,
+        55%,
+        80% {
+          opacity: 0.9;
+        }
+      }
+
+      /* --- Utility/Animation Classes --- */
+      .min-h-screen {
+        height: 100vh;
+      }
+      .relative {
+        position: relative;
+      }
+      .overflow-hidden {
+        overflow: hidden;
+      }
+      .absolute {
+        position: absolute;
+      }
+      .inset-0 {
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+      }
+      .opacity-20 {
+        opacity: 0.2;
+      }
+      .w-px {
+        width: 1px;
+      }
+      .h-20-px {
+        height: var(--h-20);
+      }
+      .text-cyber-yellow {
+        color: var(--cyber-yellow);
+      }
+
+      .bg-gradient-to-b {
+        background-image: linear-gradient(to bottom, var(--tw-gradient-stops));
+      }
+
+      .animate-dataStream {
+        animation: dataStreamGlitchFall var(--stream-duration) linear infinite,
+          flicker 0.1s infinite step-end;
+      }
+
+      @keyframes pulse {
+        0%,
+        100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.5;
+        }
+      }
+      .animate-pulse-slow {
+        animation: pulse 2s ease-in-out infinite;
+      }
+
+      .icon-svg {
+        width: var(--size-6);
+        height: var(--size-6);
+        stroke: currentColor;
+        stroke-width: 2;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        fill: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      id="animated-background"
+      class="relative min-h-screen overflow-hidden geometric-bg"
+    >
+      <div class="absolute inset-0" id="background-elements-container"></div>
+    </div>
+
+    <script>
+      // Lucide SVG contents (paths only)
+      const ICONS = {
+        Code: '<polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline>',
+        Database:
+          '<ellipse cx="12" cy="5" rx="9" ry="3"></ellipse><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"></path><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"></path>',
+        Cpu: '<rect width="16" height="16" x="4" y="4" rx="2"></rect><path d="M15 9h2"></path><path d="M15 15h2"></path><path d="M9 9H7"></path><path d="M9 15H7"></path><path d="M17 9v2"></path><path d="M17 7h-2"></path><path d="M7 15v2"></path><path d="M9 17v-2"></path>',
+      };
+
+      const FLOATING_ICONS = [
+        { icon: ICONS.Code, x: 10, y: 20, delay: 0 },
+        { icon: ICONS.Database, x: 85, y: 15, delay: 1 },
+        { icon: ICONS.Cpu, x: 15, y: 80, delay: 2 },
+        { icon: ICONS.Code, x: 90, y: 75, delay: 3 },
+      ];
+
+      const container = document.getElementById(
+        "background-elements-container"
+      );
+
+      // --- 1. Data Streams Generation ---
+      for (let i = 0; i < 8; i++) {
+        const delay = i * 0.5;
+        const duration = 3 + Math.random() * 2;
+        const left = Math.random() * 100;
+
+        const stream = document.createElement("div");
+        stream.className = "absolute animate-dataStream opacity-20";
+        stream.style.cssText = `
+                left: ${left}%;
+                animation-delay: ${delay}s;
+                --stream-duration: ${duration}s;
+            `;
+
+        const line = document.createElement("div");
+        line.className = "w-px h-20-px bg-gradient-to-b";
+        line.style.cssText = `
+                --tw-gradient-stops: transparent, var(--cyber-yellow), transparent;
+            `;
+
+        stream.appendChild(line);
+        container.appendChild(stream);
+      }
+
+      // --- 2. Floating Icons Generation ---
+      FLOATING_ICONS.forEach((data) => {
+        const iconWrapper = document.createElement("div");
+        iconWrapper.className =
+          "absolute text-cyber-yellow opacity-20 animate-pulse-slow";
+        iconWrapper.style.cssText = `
+                left: ${data.x}%;
+                top: ${data.y}%;
+                animation-delay: ${data.delay}s;
+            `;
+
+        // Create the SVG element
+        const svg = document.createElementNS(
+          "http://www.w3.org/2000/svg",
+          "svg"
+        );
+        svg.setAttribute("viewBox", "0 0 24 24");
+        svg.setAttribute("class", "icon-svg");
+        svg.innerHTML = data.icon;
+
+        iconWrapper.appendChild(svg);
+        container.appendChild(iconWrapper);
+      });
+    </script>
+  </body>
+</html>
